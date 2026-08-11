@@ -1,0 +1,10 @@
+com\abenet\taskmanager\exception\ResourceNotFoundException.class
+com\abenet\taskmanager\dto\TaskRequest.class
+com\abenet\taskmanager\repository\TaskRepository.class
+com\abenet\taskmanager\TaskManagerApplication.class
+com\abenet\taskmanager\exception\GlobalExceptionHandler.class
+com\abenet\taskmanager\model\Task$TaskBuilder.class
+com\abenet\taskmanager\model\Task.class
+com\abenet\taskmanager\model\TaskStatus.class
+com\abenet\taskmanager\controller\TaskController.class
+com\abenet\taskmanager\service\TaskService.class
