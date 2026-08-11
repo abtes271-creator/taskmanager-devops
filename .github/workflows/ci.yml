@@ -53,3 +53,9 @@ jobs:
       - name: Verify image was built
         run: docker images taskmanager
 
+- name: Run tests
+        run: mvn -B test
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/taskmanager
+          SPRING_DATASOURCE_USERNAME: taskmanager_user
+          SPRING_DATASOURCE_PASSWORD: changeme
