@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanager-app
+spec:
+  replicas: 2   # 2 copies running - this is the whole point of Kubernetes:
+                # if one pod crashes, the other keeps serving traffic while
+                # Kubernetes automatically restarts the failed one
+  selector:
+    matchLabels:
+      app: taskmanager-app
+  template:
+    metadata:
+      labels:
+        app: taskmanager-app
+    spec:
+      containers:
+        - name: taskmanager-app
+          image: taskmanager:v1   # built locally into minikube's Docker - see instructions below
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://taskmanager-db:5432/taskmanager"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: taskmanager-db-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: taskmanager-db-secret
+                  key: POSTGRES_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15

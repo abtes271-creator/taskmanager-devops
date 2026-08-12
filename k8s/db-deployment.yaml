@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanager-db
+spec:
+  replicas: 1   # only 1 - Postgres isn't designed to run multiple identical copies like this
+  selector:
+    matchLabels:
+      app: taskmanager-db
+  template:
+    metadata:
+      labels:
+        app: taskmanager-db
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: taskmanager-db-secret
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pgdata
+          emptyDir: {}   # simple ephemeral storage for learning - real prod uses PersistentVolumeClaims
